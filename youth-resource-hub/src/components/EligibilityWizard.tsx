@@ -1,382 +1,351 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useResources } from '../context/ResourcesContext';
 
-type StepKey = 'age' | 'living' | 'employment' | 'school' | 'care';
+type AgeRange = '18-24' | '25-30' | '30-plus' | 'skip';
+type HousingStatus = 'stable' | 'couch-surfing' | 'unhoused' | 'shelter' | 'skip';
+type WorkStatus = 'unemployed' | 'part-time' | 'full-time' | 'gig' | 'skip';
+type SchoolStatus = 'not-in-school' | 'hs-ged' | 'college' | 'training' | 'skip';
 
-interface AnswerState {
-  ageRange: '18-24' | '25-30' | '30+' | null;
-  livingSituation: 'stable' | 'temporary' | 'unhoused' | null;
-  employment: 'unemployed' | 'part-time' | 'full-time' | null;
-  schoolStatus: 'none' | 'hs-ged' | 'college' | null;
-  fosterCareHistory: 'yes' | 'no' | 'prefer-not' | null;
+interface Answers {
+  ageRange: AgeRange | '';
+  housing: HousingStatus | '';
+  work: WorkStatus | '';
+  school: SchoolStatus | '';
+  hasChildren: 'yes' | 'no' | 'skip' | '';
 }
 
-const steps: StepKey[] = ['age', 'living', 'employment', 'school', 'care'];
+const initialAnswers: Answers = {
+  ageRange: '',
+  housing: '',
+  work: '',
+  school: '',
+  hasChildren: '',
+};
 
 const EligibilityWizard: React.FC = () => {
-  const [answers, setAnswers] = useState<AnswerState>({
-    ageRange: null,
-    livingSituation: null,
-    employment: null,
-    schoolStatus: null,
-    fosterCareHistory: null
-  });
-  const [currentStep, setCurrentStep] = useState<number>(0);
-  const navigate = useNavigate();
-  const { resources } = useResources();
+  const [step, setStep] = useState(0);
+  const [answers, setAnswers] = useState<Answers>(initialAnswers);
+  const [showResults, setShowResults] = useState(false);
 
-  const step = steps[currentStep];
+  const totalSteps = 5;
 
-  const canGoNext = true;
+  const baseButtonClasses =
+    'focus-ring rounded-lg border px-3 py-2 text-left text-sm transition-colors';
+  const selectedClasses = 'border-teal-700 bg-teal-50';
+  const unselectedClasses = 'border-slate-300 bg-white hover:bg-slate-50';
+
+  const updateAnswer = <K extends keyof Answers>(key: K, value: Answers[K]) => {
+    setAnswers(prev => ({ ...prev, [key]: value }));
+  };
 
   const handleNext = () => {
-    if (currentStep < steps.length - 1) {
-      setCurrentStep((s) => s + 1);
+    if (step < totalSteps - 1) {
+      setStep(prev => prev + 1);
     } else {
-      navigate('/find-help', { state: { eligibilityAnswers: answers } });
+      setShowResults(true);
     }
   };
 
   const handleBack = () => {
-    if (currentStep === 0) {
-      navigate('/find-help');
-    } else {
-      setCurrentStep((s) => s - 1);
+    if (step > 0) {
+      setStep(prev => prev - 1);
     }
   };
 
-  const updateAnswer = (patch: Partial<AnswerState>) => {
-    setAnswers((prev) => ({ ...prev, ...patch }));
+  const handleReset = () => {
+    setAnswers(initialAnswers);
+    setStep(0);
+    setShowResults(false);
   };
 
-  const matchedCount = (() => {
-    let filtered = resources;
+  const renderAgeStep = () => (
+    <div>
+      <h2 className="text-lg font-semibold text-slate-900">
+        How old are you right now?
+      </h2>
+      <p className="mt-1 text-sm text-slate-700">
+        This helps us highlight programs that focus on young adults in the study county.
+        You can skip if you prefer.
+      </p>
 
-    if (answers.ageRange) {
-      filtered = filtered.filter((resource) => {
-        if (resource.age_min == null && resource.age_max == null) return true;
-        const testAge =
-          answers.ageRange === '18-24'
-            ? 20
-            : answers.ageRange === '25-30'
-            ? 27
-            : 32;
-        if (resource.age_min != null && testAge < resource.age_min) return false;
-        if (resource.age_max != null && testAge > resource.age_max) return false;
-        return true;
-      });
-    }
+      <div className="mt-4 space-y-2">
+        {[
+          { value: '18-24' as AgeRange, label: '18–24' },
+          { value: '25-30' as AgeRange, label: '25–30' },
+          { value: '30-plus' as AgeRange, label: '31 or older' },
+          { value: 'skip' as AgeRange, label: 'Prefer not to say / skip' },
+        ].map(option => (
+          <button
+            key={option.value}
+            type="button"
+            className={
+              `${baseButtonClasses} ` +
+              (answers.ageRange === option.value ? selectedClasses : unselectedClasses)
+            }
+            onClick={() => updateAnswer('ageRange', option.value)}
+          >
+            {option.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
 
-    if (answers.fosterCareHistory === 'yes') {
-      filtered = filtered.filter((resource) =>
-        resource.tags.some((tag) =>
-          tag.toLowerCase().includes('foster') || tag.toLowerCase().includes('alumni')
-        )
-      );
-    }
+  const renderHousingStep = () => (
+    <div>
+      <h2 className="text-lg font-semibold text-slate-900">
+        What best describes your current living situation?
+      </h2>
+      <p className="mt-1 text-sm text-slate-700">
+        Choose the option that feels closest. This helps surface housing and stability
+        resources. You can always skip.
+      </p>
 
-    return filtered.length;
-  })();
+      <div className="mt-4 space-y-2">
+        {[
+          { value: 'stable' as HousingStatus, label: 'Stable housing (lease or own)' },
+          { value: 'couch-surfing' as HousingStatus, label: 'Staying with friends/family (couch-surfing)' },
+          { value: 'shelter' as HousingStatus, label: 'Emergency shelter or transitional housing' },
+          { value: 'unhoused' as HousingStatus, label: 'Sleeping outside / in car / place not meant for living' },
+          { value: 'skip' as HousingStatus, label: 'Prefer not to say / skip' },
+        ].map(option => (
+          <button
+            key={option.value}
+            type="button"
+            className={
+              `${baseButtonClasses} ` +
+              (answers.housing === option.value ? selectedClasses : unselectedClasses)
+            }
+            onClick={() => updateAnswer('housing', option.value)}
+          >
+            {option.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
 
-  const StepContent: React.FC = () => {
+  const renderWorkStep = () => (
+    <div>
+      <h2 className="text-lg font-semibold text-slate-900">
+        What best describes your work situation?
+      </h2>
+      <p className="mt-1 text-sm text-slate-700">
+        This helps us highlight job and income supports. There are no right or wrong answers.
+      </p>
+
+      <div className="mt-4 space-y-2">
+        {[
+          { value: 'unemployed' as WorkStatus, label: 'Not working right now' },
+          { value: 'part-time' as WorkStatus, label: 'Working part-time' },
+          { value: 'full-time' as WorkStatus, label: 'Working full-time' },
+          { value: 'gig' as WorkStatus, label: 'Gig/irregular work (cash jobs, apps, etc.)' },
+          { value: 'skip' as WorkStatus, label: 'Prefer not to say / skip' },
+        ].map(option => (
+          <button
+            key={option.value}
+            type="button"
+            className={
+              `${baseButtonClasses} ` +
+              (answers.work === option.value ? selectedClasses : unselectedClasses)
+            }
+            onClick={() => updateAnswer('work', option.value)}
+          >
+            {option.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+
+  const renderSchoolStep = () => (
+    <div>
+      <h2 className="text-lg font-semibold text-slate-900">
+        Which of these feels closest to your current school or training status?
+      </h2>
+      <p className="mt-1 text-sm text-slate-700">
+        This helps surface education, training, and financial aid resources.
+      </p>
+
+      <div className="mt-4 space-y-2">
+        {[
+          { value: 'not-in-school' as SchoolStatus, label: 'Not in school or training right now' },
+          { value: 'hs-ged' as SchoolStatus, label: 'In high school / working on GED' },
+          { value: 'college' as SchoolStatus, label: 'In college or technical college' },
+          { value: 'training' as SchoolStatus, label: 'In a training or certification program' },
+          { value: 'skip' as SchoolStatus, label: 'Prefer not to say / skip' },
+        ].map(option => (
+          <button
+            key={option.value}
+            type="button"
+            className={
+              `${baseButtonClasses} ` +
+              (answers.school === option.value ? selectedClasses : unselectedClasses)
+            }
+            onClick={() => updateAnswer('school', option.value)}
+          >
+            {option.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+
+  const renderChildrenStep = () => (
+    <div>
+      <h2 className="text-lg font-semibold text-slate-900">
+        Do you have children you care for?
+      </h2>
+      <p className="mt-1 text-sm text-slate-700">
+        Some programs are designed for parents or caregivers. You can skip this question.
+      </p>
+
+      <div className="mt-4 space-y-2">
+        {[
+          { value: 'yes' as const, label: 'Yes' },
+          { value: 'no' as const, label: 'No' },
+          { value: 'skip' as const, label: 'Prefer not to say / skip' },
+        ].map(option => (
+          <button
+            key={option.value}
+            type="button"
+            className={
+              `${baseButtonClasses} ` +
+              (answers.hasChildren === option.value ? selectedClasses : unselectedClasses)
+            }
+            onClick={() => updateAnswer('hasChildren', option.value)}
+          >
+            {option.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+
+  const renderStep = () => {
     switch (step) {
-      case 'age':
-        return (
-          <>
-            <h2 className="text-lg font-semibold text-slate-900">How old are you (about)?</h2>
-            <p className="mt-1 text-sm text-slate-700">
-              This helps us highlight programs that match age ranges. You can choose the closest
-              option.
-            </p>
-            <div className="mt-3 grid gap-2 sm:grid-cols-3">
-              <button
-                type="button"
-                className={\`focus-ring rounded-lg border px-3 py-2 text-left text-sm \${answers.ageRange === '18-24'
-                    ? 'border-teal-700 bg-teal-50'
-                    : 'border-slate-300 bg-white hover:bg-slate-50'
-                }\`}
-                onClick={() => updateAnswer({ ageRange: '18-24' })}
-              >
-                About 18–24
-              </button>
-              <button
-                type="button"
-                className={\`focus-ring rounded-lg border px-3 py-2 text-left text-sm \${answers.ageRange === '25-30'
-                    ? 'border-teal-700 bg-teal-50'
-                    : 'border-slate-300 bg-white hover:bg-slate-50'
-                }\`}
-                onClick={() => updateAnswer({ ageRange: '25-30' })}
-              >
-                About 25–30
-              </button>
-              <button
-                type="button"
-                className={\`focus-ring rounded-lg border px-3 py-2 text-left text-sm \${answers.ageRange === '30+'
-                    ? 'border-teal-700 bg-teal-50'
-                    : 'border-slate-300 bg-white hover:bg-slate-50'
-                }\`}
-                onClick={() => updateAnswer({ ageRange: '30+' })}
-              >
-                30 and up
-              </button>
-            </div>
-          </>
-        );
-      case 'living':
-        return (
-          <>
-            <h2 className="text-lg font-semibold text-slate-900">
-              What best describes where you are staying right now?
-            </h2>
-            <p className="mt-1 text-sm text-slate-700">
-              Choose the option that feels closest. You can skip if you are not sure.
-            </p>
-            <div className="mt-3 grid gap-2 sm:grid-cols-2">
-              <button
-                type="button"
-                className={\`focus-ring rounded-lg border px-3 py-2 text-left text-sm \${answers.livingSituation === 'stable'
-                    ? 'border-teal-700 bg-teal-50'
-                    : 'border-slate-300 bg-white hover:bg-slate-50'
-                }\`}
-                onClick={() => updateAnswer({ livingSituation: 'stable' })}
-              >
-                In my own place or a steady lease
-              </button>
-              <button
-                type="button"
-                className={\`focus-ring rounded-lg border px-3 py-2 text-left text-sm \${answers.livingSituation === 'temporary'
-                    ? 'border-teal-700 bg-teal-50'
-                    : 'border-slate-300 bg-white hover:bg-slate-50'
-                }\`}
-                onClick={() => updateAnswer({ livingSituation: 'temporary' })}
-              >
-                Staying with friends, family, or couch-surfing
-              </button>
-              <button
-                type="button"
-                className={\`focus-ring rounded-lg border px-3 py-2 text-left text-sm \${answers.livingSituation === 'unhoused'
-                    ? 'border-teal-700 bg-teal-50'
-                    : 'border-slate-300 bg-white hover:bg-slate-50'
-                }\`}
-                onClick={() => updateAnswer({ livingSituation: 'unhoused' })}
-              >
-                I do not have a steady place to stay (for example, car, outside, shelter)
-              </button>
-              <button
-                type="button"
-                className="focus-ring rounded-lg border border-slate-300 bg-white px-3 py-2 text-left text-sm hover:bg-slate-50"
-                onClick={() => updateAnswer({ livingSituation: null })}
-              >
-                I prefer not to say / skip this question
-              </button>
-            </div>
-          </>
-        );
-      case 'employment':
-        return (
-          <>
-            <h2 className="text-lg font-semibold text-slate-900">
-              Are you working for pay right now?
-            </h2>
-            <p className="mt-1 text-sm text-slate-700">
-              This helps us surface job and money supports that fit your situation.
-            </p>
-            <div className="mt-3 grid gap-2 sm:grid-cols-2">
-              <button
-                type="button"
-                className={\`focus-ring rounded-lg border px-3 py-2 text-left text-sm \${answers.employment === 'unemployed'
-                    ? 'border-teal-700 bg-teal-50'
-                    : 'border-slate-300 bg-white hover:bg-slate-50'
-                }\`}
-                onClick={() => updateAnswer({ employment: 'unemployed' })}
-              >
-                Not working for pay right now
-              </button>
-              <button
-                type="button"
-                className={\`focus-ring rounded-lg border px-3 py-2 text-left text-sm \${answers.employment === 'part-time'
-                    ? 'border-teal-700 bg-teal-50'
-                    : 'border-slate-300 bg-white hover:bg-slate-50'
-                }\`}
-                onClick={() => updateAnswer({ employment: 'part-time' })}
-              >
-                Working part-time
-              </button>
-              <button
-                type="button"
-                className={\`focus-ring rounded-lg border px-3 py-2 text-left text-sm \${answers.employment === 'full-time'
-                    ? 'border-teal-700 bg-teal-50'
-                    : 'border-slate-300 bg-white hover:bg-slate-50'
-                }\`}
-                onClick={() => updateAnswer({ employment: 'full-time' })}
-              >
-                Working full-time or close to full-time
-              </button>
-              <button
-                type="button"
-                className="focus-ring rounded-lg border border-slate-300 bg-white px-3 py-2 text-left text-sm hover:bg-slate-50"
-                onClick={() => updateAnswer({ employment: null })}
-              >
-                I prefer not to say / skip this question
-              </button>
-            </div>
-          </>
-        );
-      case 'school':
-        return (
-          <>
-            <h2 className="text-lg font-semibold text-slate-900">
-              What best describes your current school situation?
-            </h2>
-            <div className="mt-3 grid gap-2 sm:grid-cols-2">
-              <button
-                type="button"
-                className={\`focus-ring rounded-lg border px-3 py-2 text-left text-sm \${answers.schoolStatus === 'none'
-                    ? 'border-teal-700 bg-teal-50'
-                    : 'border-slate-300 bg-white hover:bg-slate-50'
-                }\`}
-                onClick={() => updateAnswer({ schoolStatus: 'none' })}
-              >
-                Not in school or training right now
-              </button>
-              <button
-                type="button"
-                className={\`focus-ring rounded-lg border px-3 py-2 text-left text-sm \${answers.schoolStatus === 'hs-ged'
-                    ? 'border-teal-700 bg-teal-50'
-                    : 'border-slate-300 bg-white hover:bg-slate-50'
-                }\`}
-                onClick={() => updateAnswer({ schoolStatus: 'hs-ged' })}
-              >
-                Working on high school diploma or GED
-              </button>
-              <button
-                type="button"
-                className={\`focus-ring rounded-lg border px-3 py-2 text-left text-sm \${answers.schoolStatus === 'college'
-                    ? 'border-teal-700 bg-teal-50'
-                    : 'border-slate-300 bg-white hover:bg-slate-50'
-                }\`}
-                onClick={() => updateAnswer({ schoolStatus: 'college' })}
-              >
-                In college, training, or trade program
-              </button>
-              <button
-                type="button"
-                className="focus-ring rounded-lg border border-slate-300 bg-white px-3 py-2 text-left text-sm hover:bg-slate-50"
-                onClick={() => updateAnswer({ schoolStatus: null })}
-              >
-                I prefer not to say / skip this question
-              </button>
-            </div>
-          </>
-        );
-      case 'care':
-        return (
-          <>
-            <h2 className="text-lg font-semibold text-slate-900">
-              Have you ever been in foster care or a similar system?
-            </h2>
-            <p className="mt-1 text-sm text-slate-700">
-              This helps us highlight programs designed for foster-care alumni. You can skip this
-              question.
-            </p>
-            <div className="mt-3 grid gap-2 sm:grid-cols-2">
-              <button
-                type="button"
-                className={\`focus-ring rounded-lg border px-3 py-2 text-left text-sm \${answers.fosterCareHistory === 'yes'
-                    ? 'border-teal-700 bg-teal-50'
-                    : 'border-slate-300 bg-white hover:bg-slate-50'
-                }\`}
-                onClick={() => updateAnswer({ fosterCareHistory: 'yes' })}
-              >
-                Yes, I have been in foster care or a similar system
-              </button>
-              <button
-                type="button"
-                className={\`focus-ring rounded-lg border px-3 py-2 text-left text-sm \${answers.fosterCareHistory === 'no'
-                    ? 'border-teal-700 bg-teal-50'
-                    : 'border-slate-300 bg-white hover:bg-slate-50'
-                }\`}
-                onClick={() => updateAnswer({ fosterCareHistory: 'no' })}
-              >
-                No
-              </button>
-              <button
-                type="button"
-                className={\`focus-ring rounded-lg border px-3 py-2 text-left text-sm \${answers.fosterCareHistory === 'prefer-not'
-                    ? 'border-teal-700 bg-teal-50'
-                    : 'border-slate-300 bg-white hover:bg-slate-50'
-                }\`}
-                onClick={() => updateAnswer({ fosterCareHistory: 'prefer-not' })}
-              >
-                I prefer not to say
-              </button>
-            </div>
-          </>
-        );
+      case 0:
+        return renderAgeStep();
+      case 1:
+        return renderHousingStep();
+      case 2:
+        return renderWorkStep();
+      case 3:
+        return renderSchoolStep();
+      case 4:
+        return renderChildrenStep();
       default:
         return null;
     }
   };
 
-  const progress = ((currentStep + 1) / steps.length) * 100;
+  const progressLabel = `Step ${step + 1} of ${totalSteps}`;
 
   return (
-    <section aria-label="Eligibility checker" className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
-      <div className="mb-4 flex items-center justify-between gap-3">
-        <div>
-          <h1 className="text-xl font-semibold text-slate-900">Check possible matches</h1>
-          <p className="mt-1 text-sm text-slate-700">
-            Answer a few quick questions to see programs that may be a good fit. You can skip any
-            question that does not feel comfortable.
+    <section aria-label="Eligibility checker" className="mx-auto max-w-3xl">
+      <header className="mb-4">
+        <p className="text-xs font-medium uppercase tracking-wide text-teal-700">
+          Quick screener
+        </p>
+        <h1 className="mt-1 text-2xl font-bold text-slate-900">
+          Check what types of programs may be a good fit
+        </h1>
+        <p className="mt-2 text-sm text-slate-700">
+          This tool does not make any decisions about you. It gives a gentle starting point
+          so you can see which kinds of housing, education, work, or support programs you
+          may want to explore. You are in control and can skip any question.
+        </p>
+      </header>
+
+      {!showResults && (
+        <>
+          <div className="mb-3 flex items-center justify-between">
+            <p className="text-xs font-medium text-slate-600">{progressLabel}</p>
+            <button
+              type="button"
+              onClick={handleReset}
+              className="text-xs font-medium text-teal-700 underline hover:text-teal-800"
+            >
+              Start over
+            </button>
+          </div>
+
+          <div className="mb-6 h-2 w-full overflow-hidden rounded-full bg-slate-100">
+            <div
+              className="h-2 rounded-full bg-teal-600 transition-all"
+              style={{ width: `${((step + 1) / totalSteps) * 100}%` }}
+            />
+          </div>
+
+          <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+            {renderStep()}
+          </div>
+
+          <div className="mt-4 flex justify-between">
+            <button
+              type="button"
+              onClick={handleBack}
+              disabled={step === 0}
+              className="focus-ring inline-flex items-center rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 disabled:opacity-50"
+            >
+              Back
+            </button>
+            <button
+              type="button"
+              onClick={handleNext}
+              className="focus-ring inline-flex items-center rounded-md bg-teal-600 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-700"
+            >
+              {step === totalSteps - 1 ? 'See suggestions' : 'Next'}
+            </button>
+          </div>
+        </>
+      )}
+
+      {showResults && (
+        <div className="mt-6 rounded-lg border border-teal-100 bg-teal-50 p-4 text-sm text-slate-800">
+          <h2 className="text-base font-semibold text-teal-900">
+            Suggested directions to explore
+          </h2>
+          <p className="mt-2">
+            Based on what you shared, you may want to look at:
           </p>
+          <ul className="mt-2 list-disc pl-5">
+            <li>
+              <span className="font-semibold">Housing and stability supports</span> if
+              your living situation feels unstable or stressful.
+            </li>
+            <li>
+              <span className="font-semibold">Employment and career resources</span> if
+              you are looking for work, more hours, or a different type of job.
+            </li>
+            <li>
+              <span className="font-semibold">Education, training, and financial aid</span> if
+              you are interested in high school completion, college, or skill-building.
+            </li>
+            <li>
+              <span className="font-semibold">Mental health and wellbeing services</span> if
+              stress, anxiety, or past experiences are making daily life harder.
+            </li>
+            {answers.hasChildren === 'yes' && (
+              <li>
+                <span className="font-semibold">Parenting and family supports</span> that
+                help with childcare, parenting classes, and family-friendly housing.
+              </li>
+            )}
+          </ul>
+          <p className="mt-3">
+            You can now go to the <strong>Find Help</strong> page and use filters such as
+            housing, employment, education, or behavioral health to see specific programs
+            in the study county.
+          </p>
+          <button
+            type="button"
+            onClick={handleReset}
+            className="mt-4 focus-ring inline-flex items-center rounded-md border border-teal-700 bg-white px-3 py-2 text-xs font-semibold text-teal-800 hover:bg-teal-50"
+          >
+            Start again
+          </button>
         </div>
-        <div className="hidden text-right text-xs text-slate-600 sm:block">
-          <p>You are in control. You can stop at any time.</p>
-          <p>Current matches: {matchedCount} programs (approximate).</p>
-        </div>
-      </div>
-
-      <div className="mb-4">
-        <div className="flex items-center justify-between text-xs text-slate-600">
-          <span>
-            Step {currentStep + 1} of {steps.length}
-          </span>
-          <span>{matchedCount} possible matches</span>
-        </div>
-        <div className="mt-1 h-2 w-full rounded-full bg-slate-100">
-          <div
-            className="h-2 rounded-full bg-teal-600"
-            style={{ width: \`\${progress}%\` }}
-            aria-hidden="true"
-          />
-        </div>
-      </div>
-
-      <StepContent />
-
-      <div className="mt-6 flex items-center justify-between">
-        <button
-          type="button"
-          onClick={handleBack}
-          className="focus-ring inline-flex items-center rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
-        >
-          Back
-        </button>
-        <button
-          type="button"
-          onClick={handleNext}
-          disabled={!canGoNext}
-          className="focus-ring inline-flex items-center rounded-md bg-teal-600 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-700 disabled:cursor-not-allowed disabled:bg-slate-300"
-        >
-          {currentStep === steps.length - 1 ? 'View suggested programs' : 'Next'}
-        </button>
-      </div>
-
-      <p className="mt-4 text-xs text-slate-600">
-        This tool gives general ideas only. It does not make final eligibility decisions. When you
-        contact a program, staff can help you understand their current rules.
-      </p>
+      )}
     </section>
   );
 };
