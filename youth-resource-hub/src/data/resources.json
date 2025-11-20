@@ -1,0 +1,344 @@
+[
+  {
+    "id": "safe-steps-housing",
+    "name": "Safe Steps Housing Support",
+    "provider": "Safe Steps Collaborative",
+    "category": "Housing",
+    "tags": [
+      "youth",
+      "foster-care alumni",
+      "rapid re-housing"
+    ],
+    "description": "Safe Steps helps young adults who have been in foster care find and keep safe, stable housing in the study county.",
+    "services_offered": [
+      "Short-term rental assistance",
+      "Help finding apartments or rooms",
+      "Landlord mediation",
+      "Basic move-in support"
+    ],
+    "eligibility_summary": "Young adults ages 18\u201324 who live in the study county and have a history in foster care.",
+    "eligibility_details": "Open to foster-care alumni ages 18\u201324 living in the study county. Income and housing situation are reviewed during intake. You do not need perfect documents to start the conversation.",
+    "age_min": 18,
+    "age_max": 24,
+    "location": {
+      "address_line1": "101 Safe Way",
+      "address_line2": "Suite 200",
+      "city": "Study City",
+      "state": "SC",
+      "zip": "12345",
+      "latitude": 26.1234,
+      "longitude": -80.1234
+    },
+    "contact": {
+      "phone": "555-410-2020",
+      "email": "housing@safesteps.org",
+      "website_url": "https://example.org/safe-steps"
+    },
+    "hours": {
+      "Monday": "9:00 a.m. \u2013 5:00 p.m.",
+      "Tuesday": "9:00 a.m. \u2013 5:00 p.m.",
+      "Wednesday": "9:00 a.m. \u2013 5:00 p.m.",
+      "Thursday": "9:00 a.m. \u2013 7:00 p.m.",
+      "Friday": "9:00 a.m. \u2013 3:00 p.m."
+    },
+    "cost": {
+      "level": "Free",
+      "details": "Free for eligible participants. Some rental funds go directly to landlords."
+    },
+    "documentation_required": [
+      "Photo ID (if available)",
+      "Proof of prior foster-care involvement (if available)",
+      "Basic proof of income or benefits (can discuss options)"
+    ],
+    "accessibility_features": [
+      "Wheelchair accessible office",
+      "Bus stop within 2 blocks",
+      "Private meeting rooms",
+      "Appointments by phone or video"
+    ],
+    "last_verified": "2025-10-01",
+    "is_emergency": false,
+    "notes_for_providers": "Best fit for youth with some income who can take over rent within 6\u201312 months."
+  },
+  {
+    "id": "launchpad-job-center",
+    "name": "LaunchPad Job & Career Center",
+    "provider": "LaunchPad Workforce Alliance",
+    "category": "Employment",
+    "tags": [
+      "youth",
+      "resumes",
+      "interview prep"
+    ],
+    "description": "LaunchPad helps young adults build resumes, practice interviews, and connect with starter jobs that pay at least local minimum wage.",
+    "services_offered": [
+      "Resume and cover letter help",
+      "Job search support",
+      "Interview practice",
+      "Connections to hiring fairs"
+    ],
+    "eligibility_summary": "Ages 18\u201330 living in the study county. Open to all work backgrounds.",
+    "eligibility_details": "Open to young adults ages 18\u201330 who live in the study county. No income limit. Some training programs may have their own requirements.",
+    "age_min": 18,
+    "age_max": 30,
+    "location": {
+      "address_line1": "220 Opportunity Lane",
+      "address_line2": null,
+      "city": "Study City",
+      "state": "SC",
+      "zip": "12346",
+      "latitude": 26.1254,
+      "longitude": -80.1211
+    },
+    "contact": {
+      "phone": "555-555-0199",
+      "email": "info@launchpadjobs.org",
+      "website_url": "https://example.org/launchpad"
+    },
+    "hours": {
+      "Monday": "10:00 a.m. \u2013 6:00 p.m.",
+      "Wednesday": "10:00 a.m. \u2013 6:00 p.m.",
+      "Friday": "10:00 a.m. \u2013 4:00 p.m.",
+      "Saturday": "11:00 a.m. \u2013 3:00 p.m."
+    },
+    "cost": {
+      "level": "Free",
+      "details": "Free for job seekers. Some certification programs may have separate fees."
+    },
+    "documentation_required": [
+      "Photo ID (if available)",
+      "Resume (they can help you create one if you do not have one)"
+    ],
+    "accessibility_features": [
+      "Wheelchair accessible",
+      "Accessible restrooms",
+      "Computer lab with screen readers installed"
+    ],
+    "last_verified": "2025-09-15",
+    "is_emergency": false,
+    "notes_for_providers": "Can support participants who have gaps in employment or justice involvement; staff are trained in trauma-informed approaches."
+  },
+  {
+    "id": "guardian-scholars-program",
+    "name": "Guardian Scholars College Support",
+    "provider": "Study County Community College",
+    "category": "Education",
+    "tags": [
+      "foster-care alumni",
+      "college",
+      "scholarships"
+    ],
+    "description": "Guardian Scholars offers coaching and financial aid guidance for students who have been in foster care and are enrolled at the community college.",
+    "services_offered": [
+      "One-on-one academic coaching",
+      "Help with FAFSA and financial aid appeals",
+      "Book and emergency micro-grants",
+      "Connections to campus housing and food pantry"
+    ],
+    "eligibility_summary": "Current or incoming students at the community college with a history of foster care.",
+    "eligibility_details": "Participants must be admitted or enrolled at the Study County Community College and have a history of foster care, kinship care, or adoption from foster care. Documentation can often be coordinated with the financial aid office.",
+    "age_min": 17,
+    "age_max": 30,
+    "location": {
+      "address_line1": "500 College Circle",
+      "address_line2": "Student Services Building, Room 210",
+      "city": "Study City",
+      "state": "SC",
+      "zip": "12347",
+      "latitude": 26.1301,
+      "longitude": -80.118
+    },
+    "contact": {
+      "phone": "555-410-3030",
+      "email": "guardianscholars@studyscc.edu",
+      "website_url": "https://example.edu/guardian-scholars"
+    },
+    "hours": {
+      "Monday": "9:00 a.m. \u2013 4:00 p.m.",
+      "Tuesday": "9:00 a.m. \u2013 4:00 p.m.",
+      "Thursday": "11:00 a.m. \u2013 6:00 p.m."
+    },
+    "cost": {
+      "level": "Free",
+      "details": "Program services are free. Students remain responsible for tuition and fees not covered by aid."
+    },
+    "documentation_required": [
+      "Student ID or acceptance letter",
+      "Foster-care verification (financial aid office can assist if you are unsure)"
+    ],
+    "accessibility_features": [
+      "Elevator access",
+      "Quiet meeting spaces",
+      "Virtual appointments by phone or video"
+    ],
+    "last_verified": "2025-10-10",
+    "is_emergency": false,
+    "notes_for_providers": "Great referral for youth already interested in college or currently enrolled."
+  },
+  {
+    "id": "calm-bridge-counseling",
+    "name": "Calm Bridge Counseling Center",
+    "provider": "Calm Bridge Health",
+    "category": "Mental Health",
+    "tags": [
+      "youth",
+      "LGBTQ+",
+      "trauma-focused"
+    ],
+    "description": "Calm Bridge provides HIPAA-compliant, trauma-informed counseling for young adults, including virtual visits.",
+    "services_offered": [
+      "Individual counseling",
+      "Group support for young adults",
+      "Telehealth sessions",
+      "Referrals for medication management"
+    ],
+    "eligibility_summary": "Ages 18\u201329 in the study county. Insurance, Medicaid, or sliding scale.",
+    "eligibility_details": "Serves young adults ages 18\u201329 who live in the study county. Accepts Medicaid, some private insurance, and offers a sliding scale for those without coverage.",
+    "age_min": 18,
+    "age_max": 29,
+    "location": {
+      "address_line1": "44 River Street",
+      "address_line2": null,
+      "city": "Study City",
+      "state": "SC",
+      "zip": "12348",
+      "latitude": 26.1322,
+      "longitude": -80.116
+    },
+    "contact": {
+      "phone": "555-988-2024",
+      "email": "intake@calmbridge.org",
+      "website_url": "https://example.org/calm-bridge"
+    },
+    "hours": {
+      "Monday": "9:00 a.m. \u2013 7:00 p.m.",
+      "Tuesday": "9:00 a.m. \u2013 7:00 p.m.",
+      "Wednesday": "9:00 a.m. \u2013 5:00 p.m.",
+      "Thursday": "9:00 a.m. \u2013 7:00 p.m."
+    },
+    "cost": {
+      "level": "Sliding scale",
+      "details": "Accepts Medicaid and some private insurance. Sliding scale options available; no one turned away for first screening call."
+    },
+    "documentation_required": [
+      "Photo ID (if available)",
+      "Insurance card or Medicaid number (if you have one)"
+    ],
+    "accessibility_features": [
+      "Wheelchair accessible building",
+      "Gender-inclusive restrooms",
+      "Telehealth appointments"
+    ],
+    "last_verified": "2025-09-20",
+    "is_emergency": false,
+    "notes_for_providers": "Not a crisis center; best for scheduled counseling. For same-day crisis mental health support, use 988 or local mobile crisis lines."
+  },
+  {
+    "id": "youth-legal-pathways",
+    "name": "Youth Legal Pathways Clinic",
+    "provider": "Study County Legal Aid",
+    "category": "Legal",
+    "tags": [
+      "youth",
+      "justice-involved",
+      "records",
+      "identity documents"
+    ],
+    "description": "Youth Legal Pathways offers free legal help with ID documents, record sealing, and housing or employment-related legal questions.",
+    "services_offered": [
+      "Help getting state ID and vital records",
+      "Record sealing / expungement screening",
+      "Basic tenants\u2019 rights advice",
+      "Support with employment discrimination concerns"
+    ],
+    "eligibility_summary": "Ages 18\u201326 with low or no income in the study county.",
+    "eligibility_details": "Serves young adults ages 18\u201326 with low or no income who live or work in the study county. Some cases may be referred out depending on complexity.",
+    "age_min": 18,
+    "age_max": 26,
+    "location": {
+      "address_line1": "10 Justice Plaza",
+      "address_line2": "Suite 500",
+      "city": "Study City",
+      "state": "SC",
+      "zip": "12349",
+      "latitude": 26.135,
+      "longitude": -80.113
+    },
+    "contact": {
+      "phone": "555-211-4444",
+      "email": "youthclinic@studylegal.org",
+      "website_url": "https://example.org/youth-legal-pathways"
+    },
+    "hours": {
+      "Tuesday": "12:00 p.m. \u2013 6:00 p.m.",
+      "Thursday": "12:00 p.m. \u2013 6:00 p.m."
+    },
+    "cost": {
+      "level": "Free",
+      "details": "Legal advice and brief services are free. Court filing fees may apply but can sometimes be waived."
+    },
+    "documentation_required": [
+      "Any court papers you have (if available)",
+      "Any letters you have received about your case"
+    ],
+    "accessibility_features": [
+      "Wheelchair accessible building",
+      "Phone and video consultations",
+      "ASL interpreter available with advance notice"
+    ],
+    "last_verified": "2025-08-30",
+    "is_emergency": false,
+    "notes_for_providers": "Great option when ID or records issues are blocking housing or employment."
+  },
+  {
+    "id": "study-county-211",
+    "name": "Study County 211 Helpline",
+    "provider": "United Community 211",
+    "category": "Other",
+    "tags": [
+      "24/7",
+      "crisis",
+      "information",
+      "referrals"
+    ],
+    "description": "Call 211 anytime to talk with someone about local resources, including food, shelter, mental health, and more.",
+    "services_offered": [
+      "24/7 information and referral",
+      "Warm transfers to local agencies",
+      "Support in multiple languages"
+    ],
+    "eligibility_summary": "Open to anyone in the study county.",
+    "eligibility_details": "Available 24/7 by phone, text, or web chat. You do not need to share your name.",
+    "age_min": null,
+    "age_max": null,
+    "location": {
+      "address_line1": "Helpline \u2013 no walk-in location",
+      "address_line2": null,
+      "city": "Study City",
+      "state": "SC",
+      "zip": "00000",
+      "latitude": null,
+      "longitude": null
+    },
+    "contact": {
+      "phone": "211",
+      "email": null,
+      "website_url": "https://example.org/study-211"
+    },
+    "hours": {
+      "Every day": "24 hours"
+    },
+    "cost": {
+      "level": "Free",
+      "details": "Free from most phones. Some cell providers may treat 211 as a local call."
+    },
+    "documentation_required": [],
+    "accessibility_features": [
+      "Phone, text, and web chat options",
+      "Language line available"
+    ],
+    "last_verified": "2025-09-01",
+    "is_emergency": true,
+    "notes_for_providers": "A good starting point when youth or families are unsure where to begin."
+  }
+]
