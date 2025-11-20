@@ -15,7 +15,10 @@ const ResourceCard: React.FC<ResourceCardProps> = ({ resource }) => {
       <div className="flex items-start justify-between gap-2">
         <div>
           <h3 className="text-lg font-semibold text-slate-900">
-            <Link to={\`/resources/\${resource.id}\`} className="focus-ring rounded-sm no-underline">
+            <Link
+  to={`/resources/${resource.id}`}
+  className="focus-ring rounded-sm no-underline"
+>
               {resource.name}
             </Link>
           </h3>
